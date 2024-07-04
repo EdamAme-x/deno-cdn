@@ -1,0 +1,7 @@
+{
+    "deno.enable": false,
+    "deno.enablePaths": [
+        "./denochan-cdn/src/app/api"
+    ],
+    "deno.config": "./denochan-cdn/deno.json"
+}
