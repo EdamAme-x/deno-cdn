@@ -1,21 +1,28 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import process from "node:process";
 import path from "node:path";
 import { isLockPath } from "../../../lib/isLockPath.ts";
 import { parseBasic } from "../../../lib/parseBasic.ts";
 
-export async function GET(
-    req: Request
-) {
-  const query = (new URL(req.url).searchParams.get('path'))?.replace(/%2e%2e/g, '').replace(/%2F/g, '/').replace(/\.\./g, '') || '';
+export async function GET(req: Request) {
+  const query =
+    new URL(req.url).searchParams
+      .get("path")
+      ?.replace(/%2e%2e/g, "")
+      .replace(/%2F/g, "/")
+      .replace(/\.\./g, "") || "";
 
- try {
+  try {
     let dir = process.env.DELIVARY_DIR;
-    if (!dir) throw new Error('No delivery directory provided');
+    if (!dir) throw new Error("No delivery directory provided");
     dir = path.join(dir, query);
 
     const basic = parseBasic(req.headers.get("authorization"));
-    if (isLockPath(dir) && (basic.username !== (process.env.LOCK_USERNAME) || basic.password !== (process.env.LOCK_PASSWORD))) {
+    if (
+      isLockPath(dir) &&
+      (basic.username !== process.env.LOCK_USERNAME ||
+        basic.password !== process.env.LOCK_PASSWORD)
+    ) {
       return NextResponse.json(
         {
           error: "Cannot download lockfiles",

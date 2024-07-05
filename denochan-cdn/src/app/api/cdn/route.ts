@@ -18,19 +18,26 @@ export async function GET(req: Request) {
     if (!dir) throw new Error("No delivery directory provided");
     dir = path.join(dir, query);
     const basic = parseBasic(req.headers.get("authorization"));
-    if (isLockPath(dir) && (basic.username !== (process.env.LOCK_USERNAME) || basic.password !== (process.env.LOCK_PASSWORD))) {
-        return NextResponse.json({
-            error: "Cannot download lockfiles",
-            isSuccess: false   
-        }, {
-            status: 401,
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET,OPTIONS",
-                "WWW-Authenticate": "Basic realm=\"Locked Area\"",
-            }
-        })
+    if (
+      isLockPath(dir) &&
+      (basic.username !== process.env.LOCK_USERNAME ||
+        basic.password !== process.env.LOCK_PASSWORD)
+    ) {
+      return NextResponse.json(
+        {
+          error: "Cannot download lockfiles",
+          isSuccess: false,
+        },
+        {
+          status: 401,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,OPTIONS",
+            "WWW-Authenticate": 'Basic realm="Locked Area"',
+          },
+        }
+      );
     }
     const file = await Deno.readFile(path.join(Deno.cwd(), dir));
     let contentType: string | boolean = mime.contentType(path.extname(dir));
@@ -42,7 +49,7 @@ export async function GET(req: Request) {
     return new Response(file, {
       status: 200,
       headers: {
-        "Content-Type": contentType
+        "Content-Type": contentType,
       },
     });
   } catch (_error) {

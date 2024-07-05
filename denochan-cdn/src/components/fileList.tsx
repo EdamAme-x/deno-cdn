@@ -26,64 +26,105 @@ export function FileList({ files }: { files: Files }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {files.map((file) => {
+        {files
+          .concat([{ name: "../", type: "directory", date: "", size: "" }])
+          .map((file) => {
             const downlaodURL = `api/file?path=${(
               new URL(location.href).pathname +
               "/" +
               file.name
             ).replaceAll("//", "/")}`;
-            const cdnURL = location.origin + "/api/cdn?path=" + (new URL(location.href).pathname + "/" + file.name).replaceAll("//", "/");
-          return (
-            <TableRow key={file.name}>
-              <TableCell className="font-medium" title={file.name}>{file.name.length > 20 ? file.name.substring(0, 17) + "..." : file.name}</TableCell>
-              <TableCell>{file.type}</TableCell>
-              <TableCell>{file.date}</TableCell>
-              <TableCell className="text-right">
-                {file.type === "directory"
-                  ? "-"
-                  : filesize.filesize(parseInt(file.size))}
-              </TableCell>
-              <TableCell>
-                {file.type === "directory" ? (
-                  <a
-                    href={(
-                      new URL(location.href).pathname +
-                      "/" +
-                      file.name
-                    ).replaceAll("//", "/")}
-                  >
-                    View
-                  </a>
-                ) : (
-                  <a
-                    href={downlaodURL}
-                    className="text-blue-500 hover:underline"
-                  >
-                    Download
-                  </a>
-                )}
-              </TableCell>
-              <TableCell>
-                <Button onClick={() => {
-                  try {
-                    // for Chrome and IOS browser
-                    navigator.clipboard.writeText(cdnURL)
-                    .then(() => alert("Copied to clipboard"))
-                    return
-                  }catch (_error) {}
-                  // for Android browser
-                  const textArea = document.createElement("textarea");
-                  textArea.value = cdnURL;
-                  document.body.appendChild(textArea);
-                  textArea.select();
-                  document.execCommand("copy");
-                  document.body.removeChild(textArea);
-                  alert("Copied to clipboard");
-                }}>Copy</Button>
-              </TableCell>
-            </TableRow>
-          );
-        })}
+            const cdnURL =
+              location.origin +
+              "/api/cdn?path=" +
+              (new URL(location.href).pathname + "/" + file.name).replaceAll(
+                "//",
+                "/"
+              );
+            return (
+              <TableRow key={file.name}>
+                <TableCell className="font-medium" title={file.name}>
+                  {file.name.length > 20
+                    ? file.name.substring(0, 17) + "..."
+                    : file.name}
+                </TableCell>
+                <TableCell>{file.type}</TableCell>
+                <TableCell>{file.date}</TableCell>
+                <TableCell className="text-right">
+                  {file.type === "directory"
+                    ? "-"
+                    : filesize.filesize(parseInt(file.size))}
+                </TableCell>
+                <TableCell>
+                  {file.type === "directory" ? (
+                    <a
+                      href={(
+                        new URL(location.href).pathname +
+                        "/" +
+                        file.name
+                      ).replaceAll("//", "/")}
+                    >
+                      View
+                    </a>
+                  ) : (
+                    <a
+                      href={downlaodURL}
+                      className="text-blue-500 hover:underline"
+                    >
+                      Download
+                    </a>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {file.type === "file" ? (
+                    <Button
+                      onClick={() => {
+                        try {
+                          // for Chrome and IOS browser
+                          navigator.clipboard
+                            .writeText(cdnURL)
+                            .then(() => alert("Copied to clipboard"));
+                          return;
+                        } catch (_error) {}
+                        // for Android browser
+                        const textArea = document.createElement("textarea");
+                        textArea.value = cdnURL;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(textArea);
+                        alert("Copied to clipboard");
+                      }}
+                    >
+                      Copy
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        try {
+                          // for Chrome and IOS browser
+                          navigator.clipboard
+                            .writeText(location.href)
+                            .then(() => alert("Copied to clipboard"));
+                          return;
+                        } catch (_error) {}
+                        // for Android browser
+                        const textArea = document.createElement("textarea");
+                        textArea.value = location.href;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(textArea);
+                        alert("Copied to clipboard");
+                      }}
+                    >
+                      Copy
+                    </Button>
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
       </TableBody>
     </Table>
   );
