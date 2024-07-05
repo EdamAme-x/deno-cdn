@@ -12,10 +12,12 @@
     "server:boot": "deno task start"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "filesize": "^10.1.2",
     "lucide-react": "^0.400.0",
+    "mime-types": "^2.1.35",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",

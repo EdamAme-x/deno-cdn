@@ -21,7 +21,7 @@ export default function Home() {
 
   return <>
     {(isSuccess && !fileList.length) && <p>Loading...</p>}
-    {isSuccess && <FileList files={fileList} />}
+    {(isSuccess && !!fileList.length) && <FileList files={fileList} />}
     {!isSuccess && <p className="text-red-500">Failed to get files</p>}
   </>;
 }
