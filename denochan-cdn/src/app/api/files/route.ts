@@ -12,7 +12,7 @@ export type Files = {
 export async function GET(
     req: Request
 ) {
-  const query = (new URL(req.url).searchParams.get('path'))?.replaceAll(/%2e%2e/g, '').replaceAll(/%2F/g, '/').replaceAll(/\.\./g, '') || '';
+  const query = (new URL(req.url).searchParams.get('path'))?.replace(/%2e%2e/g, '').replace(/%2F/g, '/').replace(/\.\./g, '') || '';
 
  try {
     let dir = process.env.DELIVARY_DIR;

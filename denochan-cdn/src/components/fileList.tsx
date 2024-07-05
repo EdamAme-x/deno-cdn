@@ -32,7 +32,7 @@ export function FileList({ files }: { files: Files }) {
               "/" +
               file.name
             ).replaceAll("//", "/")}`;
-            const cdnURL = location.origin 
+            const cdnURL = location.origin + "/api/cdn?path=" + (new URL(location.href).pathname + "/" + file.name).replaceAll("//", "/");
           return (
             <TableRow key={file.name}>
               <TableCell className="font-medium" title={file.name}>{file.name.length > 20 ? file.name.substring(0, 17) + "..." : file.name}</TableCell>
