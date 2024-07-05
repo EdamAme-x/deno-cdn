@@ -6,7 +6,7 @@ export type Files = {
     name: string
     type: "file" | "directory"
     date: string
-    size: string | null
+    size: string
 }[]
 
 export async function GET(
@@ -23,7 +23,6 @@ export async function GET(
 
     for await (const file of files) {
         const Url = path.join(dir, `./${file.name}`);
-        console.log(Url);
         const fileInfo = await Deno.lstat(Url);
         if (file.isDirectory) {
             fileList.push({
